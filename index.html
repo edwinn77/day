@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>万年黄历 — 每日宜忌·农历查询</title>
+    <meta name="description" content="在线黄历查询，查看每日宜忌、农历日期、天干地支、五行纳音、冲煞方位等传统黄历信息。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- 顶部导航 -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <div class="logo">
+                <span class="logo-icon">📅</span>
+                <h1>万年黄历</h1>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-today" id="btnToday">今天</button>
+                <div class="date-picker-wrap">
+                    <input type="date" id="datePicker" class="date-picker">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- 日期导航 -->
+        <section class="date-nav" id="dateNav">
+            <button class="nav-arrow" id="prevDay" aria-label="前一天">‹</button>
+            <div class="date-display" id="dateDisplay">
+                <div class="solar-date">
+                    <span class="year" id="solarYear">2026</span>年
+                    <span class="month" id="solarMonth">2</span>月
+                    <span class="day" id="solarDay">26</span>日
+                </div>
+                <div class="weekday" id="weekday">星期四</div>
+            </div>
+            <button class="nav-arrow" id="nextDay" aria-label="后一天">›</button>
+        </section>
+
+        <!-- 核心信息卡片 -->
+        <section class="hero-card" id="heroCard">
+            <div class="hero-left">
+                <div class="lunar-day-big" id="lunarDayBig">初十</div>
+                <div class="lunar-month" id="lunarMonthDisplay">二月</div>
+            </div>
+            <div class="hero-right">
+                <div class="info-row">
+                    <span class="label">农历</span>
+                    <span class="value" id="lunarFullDate">丙午年 二月 初十</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">干支</span>
+                    <span class="value" id="ganzhiDate">丙午年 辛卯月 甲子日</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">生肖</span>
+                    <span class="value" id="zodiac">🐴 马</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">星座</span>
+                    <span class="value" id="constellation">♓ 双鱼座</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">节气</span>
+                    <span class="value" id="solarTerm">—</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">纳音</span>
+                    <span class="value" id="nayin">—</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 九星吉日判定 -->
+        <section class="auspicious-section" id="auspiciousSection">
+            <div class="auspicious-card" id="auspiciousCard">
+                <div class="auspicious-badge" id="auspiciousBadge">吉</div>
+                <div class="auspicious-info">
+                    <div class="auspicious-title" id="auspiciousTitle">九星择吉</div>
+                    <div class="auspicious-reason" id="auspiciousReason">—</div>
+                    <div class="auspicious-tags">
+                        <span class="auspicious-star" id="auspiciousStar">—</span>
+                        <span class="auspicious-group" id="auspiciousGroup">—</span>
+                        <span class="auspicious-datou hidden" id="auspiciousDaTou">大偷修日</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 宜忌卡片 -->
+        <section class="yiji-section" id="yijiSection">
+            <div class="yi-card">
+                <div class="yi-header">
+                    <span class="yi-icon">✅</span>
+                    <h2>宜</h2>
+                </div>
+                <div class="yi-list" id="yiList">
+                    <!-- JS fills -->
+                </div>
+            </div>
+            <div class="ji-card">
+                <div class="ji-header">
+                    <span class="ji-icon">🚫</span>
+                    <h2>忌</h2>
+                </div>
+                <div class="ji-list" id="jiList">
+                    <!-- JS fills -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 详细信息区 -->
+        <section class="detail-section" id="detailSection">
+            <div class="detail-card">
+                <h3>时辰吉凶</h3>
+                <div class="shichen-grid" id="shichenGrid">
+                    <!-- JS fills -->
+                </div>
+            </div>
+            <div class="detail-card">
+                <h3>今日详情</h3>
+                <div class="detail-info-list">
+                    <div class="detail-row">
+                        <span class="dlabel">五行</span>
+                        <span class="dvalue" id="wuxing">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="dlabel">冲煞</span>
+                        <span class="dvalue" id="chongsha">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="dlabel">彭祖百忌</span>
+                        <span class="dvalue" id="pengzu">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="dlabel">吉神宜趋</span>
+                        <span class="dvalue" id="jishen">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="dlabel">凶神宜忌</span>
+                        <span class="dvalue" id="xiongshen">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="dlabel">建除十二神</span>
+                        <span class="dvalue" id="jianchu">—</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 月历视图 -->
+        <section class="calendar-section" id="calendarSection">
+            <div class="calendar-header">
+                <button class="cal-nav" id="prevMonth" aria-label="上个月">‹</button>
+                <h3 id="calTitle">2026年2月</h3>
+                <button class="cal-nav" id="nextMonth" aria-label="下个月">›</button>
+            </div>
+            <div class="calendar-grid">
+                <div class="cal-weekdays">
+                    <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+                </div>
+                <div class="cal-days" id="calDays">
+                    <!-- JS fills -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>万年黄历 · 传承中华传统文化</p>
+    </footer>
+
+    <script src="lunar.js"></script>
+    <script src="almanac.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

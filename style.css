@@ -1,0 +1,824 @@
+/* ========================================
+   万年黄历 — Design System
+   ======================================== */
+
+:root {
+    /* Colors — Chinese Traditional Palette */
+    --c-bg: #0f0f1a;
+    --c-bg-card: rgba(30, 30, 50, 0.85);
+    --c-bg-card2: rgba(40, 30, 35, 0.8);
+    --c-surface: #1a1a2e;
+    --c-vermilion: #C04851;
+    /* 朱砂红 */
+    --c-gold: #D4A017;
+    /* 琉璃金 */
+    --c-gold-light: #F0D060;
+    --c-jade: #2D8B56;
+    /* 翡翠绿 */
+    --c-jade-light: #45C97A;
+    --c-ink: #e8e0d4;
+    /* 宣纸白 */
+    --c-ink-muted: #a09888;
+    --c-danger: #e04040;
+    --c-yi-bg: rgba(45, 139, 86, 0.12);
+    --c-ji-bg: rgba(192, 72, 81, 0.12);
+    --c-yi-border: rgba(45, 139, 86, 0.3);
+    --c-ji-border: rgba(192, 72, 81, 0.3);
+
+    /* Typography */
+    --f-serif: 'Noto Serif SC', 'SimSun', 'STSong', serif;
+    --f-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+    /* Spacing */
+    --gap: 20px;
+    --radius: 16px;
+    --radius-sm: 10px;
+
+    /* Glass */
+    --glass-blur: 18px;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ========================================
+   Reset & Base
+   ======================================== */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--f-sans);
+    background: var(--c-bg);
+    color: var(--c-ink);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    background-image:
+        radial-gradient(ellipse at 20% 0%, rgba(192, 72, 81, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 100%, rgba(212, 160, 23, 0.06) 0%, transparent 60%);
+}
+
+/* ========================================
+   Header
+   ======================================== */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    background: rgba(15, 15, 26, 0.88);
+    border-bottom: var(--glass-border);
+}
+
+.header-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 14px var(--gap);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    font-size: 1.6rem;
+}
+
+.logo h1 {
+    font-family: var(--f-serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--c-gold), var(--c-gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.06em;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-today {
+    font-family: var(--f-sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 6px 16px;
+    border: 1px solid rgba(212, 160, 23, 0.4);
+    border-radius: 20px;
+    background: rgba(212, 160, 23, 0.1);
+    color: var(--c-gold-light);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-today:hover {
+    background: rgba(212, 160, 23, 0.25);
+    border-color: var(--c-gold);
+    transform: scale(1.04);
+}
+
+.date-picker-wrap {
+    position: relative;
+}
+
+.date-picker {
+    font-family: var(--f-sans);
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--c-ink);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.date-picker:hover,
+.date-picker:focus {
+    border-color: var(--c-gold);
+}
+
+/* Chrome date picker icon color */
+.date-picker::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+}
+
+/* ========================================
+   Main Content
+   ======================================== */
+.main-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--gap);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+/* ========================================
+   Date Navigation
+   ======================================== */
+.date-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+}
+
+.nav-arrow {
+    width: 44px;
+    height: 44px;
+    border: var(--glass-border);
+    border-radius: 50%;
+    background: var(--c-bg-card);
+    color: var(--c-ink);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(8px);
+}
+
+.nav-arrow:hover {
+    background: rgba(212, 160, 23, 0.15);
+    border-color: var(--c-gold);
+    color: var(--c-gold-light);
+    transform: scale(1.1);
+}
+
+.date-display {
+    text-align: center;
+    min-width: 200px;
+}
+
+.solar-date {
+    font-family: var(--f-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--c-ink);
+}
+
+.solar-date .year {
+    color: var(--c-ink-muted);
+}
+
+.solar-date .month,
+.solar-date .day {
+    color: var(--c-gold-light);
+}
+
+.weekday {
+    font-size: 0.9rem;
+    color: var(--c-ink-muted);
+    margin-top: 2px;
+}
+
+/* ========================================
+   Hero Card
+   ======================================== */
+.hero-card {
+    display: flex;
+    gap: 28px;
+    background: var(--c-bg-card);
+    backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    animation: fadeInUp 0.5s ease both;
+}
+
+.hero-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    padding-right: 28px;
+}
+
+.lunar-day-big {
+    font-family: var(--f-serif);
+    font-size: 3.2rem;
+    font-weight: 900;
+    background: linear-gradient(180deg, var(--c-vermilion), #e06870);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+}
+
+.lunar-month {
+    font-family: var(--f-serif);
+    font-size: 1.1rem;
+    color: var(--c-ink-muted);
+    margin-top: 4px;
+}
+
+.hero-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.info-row .label {
+    font-size: 0.8rem;
+    color: var(--c-ink-muted);
+    min-width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.info-row .value {
+    font-family: var(--f-serif);
+    font-size: 0.95rem;
+    color: var(--c-ink);
+}
+
+/* ========================================
+   宜忌 Section
+   ======================================== */
+.yiji-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+    animation: fadeInUp 0.5s 0.1s ease both;
+}
+
+.yi-card,
+.ji-card {
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid;
+}
+
+.yi-card {
+    background: var(--c-yi-bg);
+    border-color: var(--c-yi-border);
+}
+
+.ji-card {
+    background: var(--c-ji-bg);
+    border-color: var(--c-ji-border);
+}
+
+.yi-header,
+.ji-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.yi-header h2 {
+    font-family: var(--f-serif);
+    font-size: 1.3rem;
+    color: var(--c-jade-light);
+}
+
+.ji-header h2 {
+    font-family: var(--f-serif);
+    font-size: 1.3rem;
+    color: var(--c-vermilion);
+}
+
+.yi-icon,
+.ji-icon {
+    font-size: 1.2rem;
+}
+
+.yi-list,
+.ji-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.yi-list .tag {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background: rgba(45, 139, 86, 0.15);
+    color: var(--c-jade-light);
+    border: 1px solid rgba(45, 139, 86, 0.2);
+    transition: all 0.2s;
+}
+
+.yi-list .tag:hover {
+    background: rgba(45, 139, 86, 0.3);
+    transform: translateY(-1px);
+}
+
+.ji-list .tag {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background: rgba(192, 72, 81, 0.15);
+    color: #e87080;
+    border: 1px solid rgba(192, 72, 81, 0.2);
+    transition: all 0.2s;
+}
+
+.ji-list .tag:hover {
+    background: rgba(192, 72, 81, 0.3);
+    transform: translateY(-1px);
+}
+
+/* ========================================
+   Auspicious Day (九星吉日)
+   ======================================== */
+.auspicious-section {
+    animation: fadeInUp 0.5s 0.05s ease both;
+}
+
+.auspicious-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 24px;
+    border-radius: var(--radius);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid;
+    transition: all 0.3s ease;
+}
+
+.auspicious-card.lucky {
+    background: linear-gradient(135deg, rgba(45, 139, 86, 0.12), rgba(45, 139, 86, 0.06));
+    border-color: rgba(45, 139, 86, 0.35);
+}
+
+.auspicious-card.unlucky {
+    background: linear-gradient(135deg, rgba(192, 72, 81, 0.12), rgba(192, 72, 81, 0.06));
+    border-color: rgba(192, 72, 81, 0.35);
+}
+
+.auspicious-badge {
+    font-family: var(--f-serif);
+    font-size: 2rem;
+    font-weight: 900;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.auspicious-badge.lucky {
+    background: linear-gradient(135deg, var(--c-jade), var(--c-jade-light));
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(45, 139, 86, 0.3);
+}
+
+.auspicious-badge.unlucky {
+    background: linear-gradient(135deg, #8a3a3a, var(--c-vermilion));
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(192, 72, 81, 0.3);
+}
+
+.auspicious-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.auspicious-title {
+    font-family: var(--f-serif);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--c-gold);
+}
+
+.auspicious-reason {
+    font-size: 0.88rem;
+    color: var(--c-ink);
+    line-height: 1.4;
+}
+
+.auspicious-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.auspicious-star,
+.auspicious-group {
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--c-ink-muted);
+}
+
+.auspicious-datou {
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 12px;
+    background: rgba(212, 160, 23, 0.15);
+    border: 1px solid rgba(212, 160, 23, 0.3);
+    color: var(--c-gold-light);
+    font-weight: 500;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ========================================
+   Detail Section
+   ======================================== */
+.detail-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+    animation: fadeInUp 0.5s 0.2s ease both;
+}
+
+.detail-card {
+    background: var(--c-bg-card);
+    backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+}
+
+.detail-card h3 {
+    font-family: var(--f-serif);
+    font-size: 1.05rem;
+    color: var(--c-gold);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.detail-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.detail-row {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+}
+
+.dlabel {
+    font-size: 0.78rem;
+    color: var(--c-ink-muted);
+    min-width: 72px;
+    flex-shrink: 0;
+}
+
+.dvalue {
+    font-size: 0.88rem;
+    color: var(--c-ink);
+    line-height: 1.5;
+}
+
+/* Shichen Grid */
+.shichen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.shichen-item {
+    text-align: center;
+    padding: 8px 4px;
+    border-radius: var(--radius-sm);
+    font-size: 0.78rem;
+    transition: transform 0.2s;
+}
+
+.shichen-item:hover {
+    transform: scale(1.06);
+}
+
+.shichen-item.ji {
+    background: rgba(45, 139, 86, 0.1);
+    border: 1px solid rgba(45, 139, 86, 0.15);
+    color: var(--c-jade-light);
+}
+
+.shichen-item.xiong {
+    background: rgba(192, 72, 81, 0.1);
+    border: 1px solid rgba(192, 72, 81, 0.15);
+    color: #e87080;
+}
+
+.shichen-name {
+    font-family: var(--f-serif);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.shichen-time {
+    font-size: 0.7rem;
+    color: var(--c-ink-muted);
+    display: block;
+}
+
+.shichen-status {
+    font-size: 0.72rem;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+/* ========================================
+   Calendar Section
+   ======================================== */
+.calendar-section {
+    background: var(--c-bg-card);
+    backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    animation: fadeInUp 0.5s 0.3s ease both;
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.calendar-header h3 {
+    font-family: var(--f-serif);
+    font-size: 1.1rem;
+    color: var(--c-gold);
+}
+
+.cal-nav {
+    width: 36px;
+    height: 36px;
+    border: var(--glass-border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--c-ink);
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.cal-nav:hover {
+    background: rgba(212, 160, 23, 0.15);
+    border-color: var(--c-gold);
+    color: var(--c-gold-light);
+}
+
+.cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--c-ink-muted);
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cal-weekdays span:first-child,
+.cal-weekdays span:last-child {
+    color: var(--c-vermilion);
+    opacity: 0.7;
+}
+
+.cal-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.cal-day {
+    text-align: center;
+    padding: 6px 2px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.cal-day:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: scale(1.08);
+}
+
+.cal-day.today {
+    background: rgba(212, 160, 23, 0.15);
+    border: 1px solid rgba(212, 160, 23, 0.3);
+}
+
+.cal-day.selected {
+    background: linear-gradient(135deg, rgba(192, 72, 81, 0.3), rgba(192, 72, 81, 0.15));
+    border: 1px solid var(--c-vermilion);
+}
+
+.cal-day.other-month {
+    opacity: 0.3;
+}
+
+.cal-day .solar {
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: block;
+}
+
+.cal-day .lunar {
+    font-size: 0.65rem;
+    color: var(--c-ink-muted);
+    display: block;
+    margin-top: 1px;
+}
+
+.cal-day .lunar.festival {
+    color: var(--c-vermilion);
+    font-weight: 500;
+}
+
+.cal-day .lunar.term {
+    color: var(--c-jade-light);
+    font-weight: 500;
+}
+
+.cal-day.weekend .solar {
+    color: var(--c-vermilion);
+    opacity: 0.8;
+}
+
+/* ========================================
+   Footer
+   ======================================== */
+.footer {
+    text-align: center;
+    padding: 28px var(--gap);
+    color: var(--c-ink-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    margin-top: 20px;
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.view-transition {
+    animation: fadeInUp 0.35s ease both;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 640px) {
+    .hero-card {
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+    }
+
+    .hero-left {
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding-bottom: 16px;
+        flex-direction: row;
+        gap: 12px;
+    }
+
+    .lunar-day-big {
+        font-size: 2.6rem;
+    }
+
+    .yiji-section {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-section {
+        grid-template-columns: 1fr;
+    }
+
+    .shichen-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .date-display .solar-date {
+        font-size: 1.2rem;
+    }
+
+    .nav-arrow {
+        width: 38px;
+        height: 38px;
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .main-content {
+        padding: 12px;
+        gap: 14px;
+    }
+
+    .shichen-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .header-inner {
+        padding: 10px 12px;
+    }
+
+    .logo h1 {
+        font-size: 1.1rem;
+    }
+}

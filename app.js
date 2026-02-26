@@ -1,0 +1,337 @@
+/**
+ * app.js — UI 交互控制
+ * 负责日期导航、日历渲染、数据更新
+ */
+
+(function () {
+    'use strict';
+
+    // ============ 状态 ============
+    let currentDate = new Date();
+    let calendarYear, calendarMonth;
+
+    // ============ DOM 引用 ============
+    const $ = id => document.getElementById(id);
+
+    const els = {
+        datePicker: $('datePicker'),
+        btnToday: $('btnToday'),
+        prevDay: $('prevDay'),
+        nextDay: $('nextDay'),
+        solarYear: $('solarYear'),
+        solarMonth: $('solarMonth'),
+        solarDay: $('solarDay'),
+        weekday: $('weekday'),
+        lunarDayBig: $('lunarDayBig'),
+        lunarMonthDisplay: $('lunarMonthDisplay'),
+        lunarFullDate: $('lunarFullDate'),
+        ganzhiDate: $('ganzhiDate'),
+        zodiac: $('zodiac'),
+        constellation: $('constellation'),
+        solarTerm: $('solarTerm'),
+        nayin: $('nayin'),
+        yiList: $('yiList'),
+        jiList: $('jiList'),
+        wuxing: $('wuxing'),
+        chongsha: $('chongsha'),
+        pengzu: $('pengzu'),
+        jishen: $('jishen'),
+        xiongshen: $('xiongshen'),
+        jianchu: $('jianchu'),
+        shichenGrid: $('shichenGrid'),
+        calTitle: $('calTitle'),
+        calDays: $('calDays'),
+        prevMonth: $('prevMonth'),
+        nextMonth: $('nextMonth'),
+        // 九星吉日
+        auspiciousCard: $('auspiciousCard'),
+        auspiciousBadge: $('auspiciousBadge'),
+        auspiciousTitle: $('auspiciousTitle'),
+        auspiciousReason: $('auspiciousReason'),
+        auspiciousStar: $('auspiciousStar'),
+        auspiciousGroup: $('auspiciousGroup'),
+        auspiciousDaTou: $('auspiciousDaTou'),
+    };
+
+    // ============ 核心更新函数 ============
+    function updateAll() {
+        const y = currentDate.getFullYear();
+        const m = currentDate.getMonth() + 1;
+        const d = currentDate.getDate();
+
+        // 获取所有日期信息
+        const info = Lunar.getDateInfo(y, m, d);
+        if (!info) return;
+
+        const almanac = Almanac.getDayAlmanac(info);
+        if (!almanac) return;
+
+        // === 更新顶部日期 ===
+        els.solarYear.textContent = y;
+        els.solarMonth.textContent = m;
+        els.solarDay.textContent = d;
+        els.weekday.textContent = info.solar.weekday;
+
+        // === 更新 date picker ===
+        els.datePicker.value = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+
+        // === 更新英雄卡片 ===
+        els.lunarDayBig.textContent = info.lunar.dayText;
+        els.lunarMonthDisplay.textContent = info.lunar.monthText;
+        els.lunarFullDate.textContent = info.lunar.fullText;
+        els.ganzhiDate.textContent = info.ganzhi.fullText;
+        els.zodiac.textContent = info.zodiac.emoji + ' ' + info.zodiac.name;
+        els.constellation.textContent = info.constellation.emoji + ' ' + info.constellation.name;
+        els.solarTerm.textContent = info.solarTerm || '—';
+        els.nayin.textContent = info.nayin;
+
+        // === 更新宜忌 ===
+        renderTags(els.yiList, almanac.yi, 'tag');
+        renderTags(els.jiList, almanac.ji, 'tag');
+
+        // === 更新详细信息 ===
+        els.wuxing.textContent = almanac.wuxing;
+        els.chongsha.textContent = almanac.chongSha.text;
+        els.pengzu.textContent = almanac.pengzu;
+        els.jishen.textContent = almanac.jiShen.join(' ');
+        els.xiongshen.textContent = almanac.xiongShen.join(' ');
+        els.jianchu.textContent = almanac.jianChu;
+
+        // === 更新时辰 ===
+        renderShiChen(almanac.shiChen);
+
+        // === 更新九星吉日 ===
+        if (almanac.auspicious) {
+            const aus = almanac.auspicious;
+            els.auspiciousBadge.textContent = aus.status;
+            els.auspiciousBadge.className = 'auspicious-badge ' + (aus.isLucky ? 'lucky' : 'unlucky');
+            els.auspiciousCard.className = 'auspicious-card ' + (aus.isLucky ? 'lucky' : 'unlucky');
+            els.auspiciousReason.textContent = aus.reason;
+            els.auspiciousStar.textContent = '☆ ' + aus.nineStar.starName;
+            els.auspiciousGroup.textContent = aus.nineStar.monthGroup;
+            if (aus.daTouXiu) {
+                els.auspiciousDaTou.classList.remove('hidden');
+            } else {
+                els.auspiciousDaTou.classList.add('hidden');
+            }
+        }
+
+        // === 更新日历 ===
+        calendarYear = y;
+        calendarMonth = m;
+        renderCalendar();
+
+        // 添加动画
+        animateContent();
+    }
+
+    function renderTags(container, items, cls) {
+        container.innerHTML = '';
+        items.forEach(item => {
+            const span = document.createElement('span');
+            span.className = cls;
+            span.textContent = item;
+            container.appendChild(span);
+        });
+    }
+
+    function renderShiChen(shiChen) {
+        els.shichenGrid.innerHTML = '';
+        shiChen.forEach(sc => {
+            const div = document.createElement('div');
+            div.className = 'shichen-item ' + (sc.isJi ? 'ji' : 'xiong');
+            div.innerHTML = `
+                <span class="shichen-name">${sc.name}</span>
+                <span class="shichen-time">${sc.time}</span>
+                <span class="shichen-status">${sc.status}</span>
+            `;
+            els.shichenGrid.appendChild(div);
+        });
+    }
+
+    // ============ 日历渲染 ============
+    function renderCalendar() {
+        els.calTitle.textContent = `${calendarYear}年${calendarMonth}月`;
+
+        const firstDay = new Date(calendarYear, calendarMonth - 1, 1);
+        const lastDay = new Date(calendarYear, calendarMonth, 0);
+        const startDow = firstDay.getDay();
+        const totalDays = lastDay.getDate();
+
+        const today = new Date();
+        const todayStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+        const selStr = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+
+        els.calDays.innerHTML = '';
+
+        // 上月填充
+        const prevLastDay = new Date(calendarYear, calendarMonth - 1, 0).getDate();
+        for (let i = startDow - 1; i >= 0; i--) {
+            const day = prevLastDay - i;
+            const pm = calendarMonth - 1;
+            const py = pm < 1 ? calendarYear - 1 : calendarYear;
+            const actualM = pm < 1 ? 12 : pm;
+            const lunarInfo = Lunar.solarToLunar(py, actualM, day);
+            const el = createCalDay(day, lunarInfo, true, false, false, py, actualM, day);
+            els.calDays.appendChild(el);
+        }
+
+        // 本月
+        for (let d = 1; d <= totalDays; d++) {
+            const dateStr = `${calendarYear}-${calendarMonth}-${d}`;
+            const isToday = dateStr === todayStr;
+            const isSel = dateStr === selStr;
+            const lunarInfo = Lunar.solarToLunar(calendarYear, calendarMonth, d);
+            const dow = new Date(calendarYear, calendarMonth - 1, d).getDay();
+            const isWeekend = dow === 0 || dow === 6;
+            const el = createCalDay(d, lunarInfo, false, isToday, isSel, calendarYear, calendarMonth, d, isWeekend);
+            els.calDays.appendChild(el);
+        }
+
+        // 下月填充到42天
+        const totalCells = startDow + totalDays;
+        const remaining = (totalCells <= 35) ? (35 - totalCells) : (42 - totalCells);
+        for (let d = 1; d <= remaining; d++) {
+            const nm = calendarMonth + 1;
+            const ny = nm > 12 ? calendarYear + 1 : calendarYear;
+            const actualM = nm > 12 ? 1 : nm;
+            const lunarInfo = Lunar.solarToLunar(ny, actualM, d);
+            const el = createCalDay(d, lunarInfo, true, false, false, ny, actualM, d);
+            els.calDays.appendChild(el);
+        }
+    }
+
+    function createCalDay(day, lunarInfo, isOther, isToday, isSel, year, month, dayNum, isWeekend) {
+        const div = document.createElement('div');
+        let cls = 'cal-day';
+        if (isOther) cls += ' other-month';
+        if (isToday) cls += ' today';
+        if (isSel) cls += ' selected';
+        if (isWeekend) cls += ' weekend';
+        div.className = cls;
+
+        // 农历显示
+        let lunarText = '';
+        let lunarCls = '';
+        if (lunarInfo) {
+            const festival = Lunar.getLunarFestival(lunarInfo.month, lunarInfo.day);
+            const solarFes = Lunar.getSolarFestival(month, dayNum);
+            const term = Lunar.getSolarTermForDate(year, month, dayNum);
+
+            if (festival) {
+                lunarText = festival;
+                lunarCls = 'lunar festival';
+            } else if (term) {
+                lunarText = term;
+                lunarCls = 'lunar term';
+            } else if (solarFes) {
+                lunarText = solarFes;
+                lunarCls = 'lunar festival';
+            } else {
+                lunarText = Lunar.lunarDayText(lunarInfo.month, lunarInfo.day, lunarInfo.isLeap);
+                lunarCls = 'lunar';
+            }
+        }
+
+        div.innerHTML = `
+            <span class="solar">${day}</span>
+            <span class="${lunarCls}">${lunarText}</span>
+        `;
+
+        div.addEventListener('click', () => {
+            currentDate = new Date(year, month - 1, dayNum);
+            updateAll();
+        });
+
+        return div;
+    }
+
+    // ============ 动画 ============
+    function animateContent() {
+        const sections = document.querySelectorAll('.hero-card, .yiji-section, .detail-section, .calendar-section');
+        sections.forEach(s => {
+            s.classList.remove('view-transition');
+            // Force reflow
+            void s.offsetWidth;
+            s.classList.add('view-transition');
+        });
+    }
+
+    // ============ 日期导航 ============
+    function goToDate(date) {
+        currentDate = date;
+        updateAll();
+    }
+
+    function prevDay() {
+        const d = new Date(currentDate);
+        d.setDate(d.getDate() - 1);
+        goToDate(d);
+    }
+
+    function nextDay() {
+        const d = new Date(currentDate);
+        d.setDate(d.getDate() + 1);
+        goToDate(d);
+    }
+
+    function goToday() {
+        goToDate(new Date());
+    }
+
+    function prevMonth() {
+        calendarMonth--;
+        if (calendarMonth < 1) {
+            calendarMonth = 12;
+            calendarYear--;
+        }
+        renderCalendar();
+        els.calTitle.textContent = `${calendarYear}年${calendarMonth}月`;
+    }
+
+    function nextMonth() {
+        calendarMonth++;
+        if (calendarMonth > 12) {
+            calendarMonth = 1;
+            calendarYear++;
+        }
+        renderCalendar();
+        els.calTitle.textContent = `${calendarYear}年${calendarMonth}月`;
+    }
+
+    // ============ 事件绑定 ============
+    function bindEvents() {
+        els.prevDay.addEventListener('click', prevDay);
+        els.nextDay.addEventListener('click', nextDay);
+        els.btnToday.addEventListener('click', goToday);
+        els.prevMonth.addEventListener('click', prevMonth);
+        els.nextMonth.addEventListener('click', nextMonth);
+
+        els.datePicker.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val) {
+                const parts = val.split('-');
+                goToDate(new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])));
+            }
+        });
+
+        // 键盘导航
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevDay();
+            if (e.key === 'ArrowRight') nextDay();
+        });
+    }
+
+    // ============ 初始化 ============
+    function init() {
+        bindEvents();
+        updateAll();
+    }
+
+    // DOM Ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
