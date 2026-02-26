@@ -51,6 +51,11 @@
         auspiciousStar: $('auspiciousStar'),
         auspiciousGroup: $('auspiciousGroup'),
         auspiciousDaTou: $('auspiciousDaTou'),
+        // 吉日弹窗
+        btnFindLucky: $('btnFindLucky'),
+        luckyModal: $('luckyModal'),
+        modalClose: $('modalClose'),
+        luckyList: $('luckyList'),
     };
 
     // ============ 核心更新函数 ============
@@ -257,6 +262,103 @@
         });
     }
 
+    // ============ 吉日列表 ============
+    function findUpcomingLuckyDays() {
+        const results = [];
+        const startDate = new Date(currentDate);
+        const maxDays = 90; // 向前扫掐 90 天
+        const maxResults = 20;
+
+        for (let i = 1; i <= maxDays && results.length < maxResults; i++) {
+            const d = new Date(startDate);
+            d.setDate(d.getDate() + i);
+            const y = d.getFullYear();
+            const m = d.getMonth() + 1;
+            const dd = d.getDate();
+
+            const info = Lunar.getDateInfo(y, m, dd);
+            if (!info) continue;
+
+            const ganzhiMonthInfo = Lunar.getGanZhiMonthInfo(y, m, dd);
+            const monthNum = ganzhiMonthInfo ? ganzhiMonthInfo.monthNum : info.lunar.month;
+            const yearGanIdx = ganzhiMonthInfo
+                ? ((ganzhiMonthInfo.ganzhiYear - 4) % 10 + 10) % 10
+                : 0;
+
+            const aus = Almanac.getAuspiciousDay(
+                info.ganzhi.dayIdx60, info.ganzhi.dayZhiIdx,
+                yearGanIdx, monthNum
+            );
+
+            if (aus.isLucky) {
+                results.push({
+                    date: d,
+                    year: y, month: m, day: dd,
+                    info,
+                    auspicious: aus
+                });
+            }
+        }
+        return results;
+    }
+
+    function renderLuckyModal() {
+        const days = findUpcomingLuckyDays();
+        els.luckyList.innerHTML = '';
+
+        if (days.length === 0) {
+            els.luckyList.innerHTML = '<div class="lucky-empty">近90天内暂无吉日</div>';
+            return;
+        }
+
+        const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+
+        days.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'lucky-item';
+
+            const dow = item.date.getDay();
+            const dateStr = `${item.year}年${item.month}月${item.day}日`;
+            const weekStr = `星期${weekdays[dow]}`;
+            const daysAway = Math.round((item.date - currentDate) / 86400000);
+
+            row.innerHTML = `
+                <div class="lucky-date">
+                    <span class="lucky-solar">${dateStr}</span>
+                    <span class="lucky-week">${weekStr} · ${daysAway}天后</span>
+                </div>
+                <div class="lucky-detail">
+                    <span class="lucky-lunar">${item.info.lunar.monthText}${item.info.lunar.dayText}</span>
+                    <span class="lucky-gz">${item.info.ganzhi.day}日</span>
+                </div>
+                <div class="lucky-type">
+                    <span class="lucky-type-badge">${item.auspicious.nineStar.auspiciousType}</span>
+                    ${item.auspicious.daTouXiu ? '<span class="lucky-datou-badge">修</span>' : ''}
+                </div>
+            `;
+
+            row.addEventListener('click', () => {
+                currentDate = new Date(item.year, item.month - 1, item.day);
+                updateAll();
+                closeLuckyModal();
+            });
+
+            els.luckyList.appendChild(row);
+        });
+    }
+
+    function openLuckyModal() {
+        renderLuckyModal();
+        els.luckyModal.classList.remove('hidden');
+        // 禁止背景滚动
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLuckyModal() {
+        els.luckyModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
     // ============ 日期导航 ============
     function goToDate(date) {
         currentDate = date;
@@ -306,6 +408,13 @@
         els.btnToday.addEventListener('click', goToday);
         els.prevMonth.addEventListener('click', prevMonth);
         els.nextMonth.addEventListener('click', nextMonth);
+
+        // 吉日弹窗
+        els.btnFindLucky.addEventListener('click', openLuckyModal);
+        els.modalClose.addEventListener('click', closeLuckyModal);
+        els.luckyModal.addEventListener('click', (e) => {
+            if (e.target === els.luckyModal) closeLuckyModal();
+        });
 
         els.datePicker.addEventListener('change', (e) => {
             const val = e.target.value;

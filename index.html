@@ -93,8 +93,25 @@
                         <span class="auspicious-datou hidden" id="auspiciousDaTou">大偷修日</span>
                     </div>
                 </div>
+                <button class="btn-find-lucky" id="btnFindLucky">
+                    <span class="btn-lucky-icon">🔍</span>
+                    <span>查看吉日</span>
+                </button>
             </div>
         </section>
+
+        <!-- 吉日列表弹窗 -->
+        <div class="modal-overlay hidden" id="luckyModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📅 近期九星吉日</h2>
+                    <button class="modal-close" id="modalClose">✕</button>
+                </div>
+                <div class="modal-body" id="luckyList">
+                    <!-- JS fills -->
+                </div>
+            </div>
+        </div>
 
         <!-- 宜忌卡片 -->
         <section class="yiji-section" id="yijiSection">
