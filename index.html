@@ -288,6 +288,75 @@
             </div>
         </section>
 
+        <!-- 后天八卦人体图 -->
+        <section class="bagua-section" id="baguaSection">
+            <h3>后天八卦 · 人体宫位</h3>
+            <div class="bagua-grid">
+                <div class="bagua-cell wood" data-gua="xun" onclick="showBaguaDetail(this)">
+                    <div class="gua-symbol">☴</div>
+                    <div class="gua-name">巽</div>
+                    <div class="gua-dir">东南</div>
+                    <div class="gua-brief">胆·股·胸部</div>
+                </div>
+                <div class="bagua-cell fire" data-gua="li" onclick="showBaguaDetail(this)">
+                    <div class="gua-symbol">☲</div>
+                    <div class="gua-name">离</div>
+                    <div class="gua-dir">南</div>
+                    <div class="gua-brief">心·眼·血液</div>
+                </div>
+                <div class="bagua-cell earth" data-gua="kun" onclick="showBaguaDetail(this)">
+                    <div class="gua-symbol">☷</div>
+                    <div class="gua-name">坤</div>
+                    <div class="gua-dir">西南</div>
+                    <div class="gua-brief">脾胃·腹部</div>
+                </div>
+                <div class="bagua-cell wood" data-gua="zhen" onclick="showBaguaDetail(this)">
+                    <div class="gua-symbol">☳</div>
+                    <div class="gua-name">震</div>
+                    <div class="gua-dir">东</div>
+                    <div class="gua-brief">肝·足·左肋</div>
+                </div>
+                <div class="bagua-cell center">
+                    <div class="gua-body">🧍</div>
+                    <div class="gua-name">中</div>
+                    <div class="gua-dir">五</div>
+                </div>
+                <div class="bagua-cell metal" data-gua="dui" onclick="showBaguaDetail(this)">
+                    <div class="gua-symbol">☱</div>
+                    <div class="gua-name">兑</div>
+                    <div class="gua-dir">西</div>
+                    <div class="gua-brief">肺·口·咽喉</div>
+                </div>
+                <div class="bagua-cell earth" data-gua="gen" onclick="showBaguaDetail(this)">
+                    <div class="gua-symbol">☶</div>
+                    <div class="gua-name">艮</div>
+                    <div class="gua-dir">东北</div>
+                    <div class="gua-brief">胃·手·关节</div>
+                </div>
+                <div class="bagua-cell water" data-gua="kan" onclick="showBaguaDetail(this)">
+                    <div class="gua-symbol">☵</div>
+                    <div class="gua-name">坎</div>
+                    <div class="gua-dir">北</div>
+                    <div class="gua-brief">肾·耳·膀胱</div>
+                </div>
+                <div class="bagua-cell metal" data-gua="qian" onclick="showBaguaDetail(this)">
+                    <div class="gua-symbol">☰</div>
+                    <div class="gua-name">乾</div>
+                    <div class="gua-dir">西北</div>
+                    <div class="gua-brief">头·大肠</div>
+                </div>
+            </div>
+            <!-- 详情浮层 -->
+            <div class="bagua-detail hidden" id="baguaDetail">
+                <div class="bagua-detail-header">
+                    <span class="bagua-detail-symbol" id="bdSymbol">☰</span>
+                    <span class="bagua-detail-name" id="bdName">乾</span>
+                    <span class="bagua-detail-close" onclick="closeBaguaDetail()">✕</span>
+                </div>
+                <div class="bagua-detail-body" id="bdBody">—</div>
+            </div>
+        </section>
+
         <!-- 月历视图 -->
         <section class="calendar-section" id="calendarSection">
             <div class="calendar-header">

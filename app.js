@@ -479,3 +479,29 @@
         init();
     }
 })();
+
+// ============ 八卦人体图交互 (全局) ============
+const baguaData = {
+    qian: { symbol: '☰', name: '乾', parts: '头，大肠，右脚，肠头。' },
+    dui: { symbol: '☱', name: '兑', parts: '口，肺，右胳膊，右肋，牙齿，嘴角，咽喉，痰涎，肛门，气管等呼吸系统。' },
+    li: { symbol: '☲', name: '离', parts: '眼，心脏，小肠，乳房，三焦，血液等。' },
+    zhen: { symbol: '☳', name: '震', parts: '足，肝脏，筋爪，左胳膊，左肋。' },
+    xun: { symbol: '☴', name: '巽', parts: '股，胆，左肩背，气管，胸部。' },
+    kan: { symbol: '☵', name: '坎', parts: '耳，肾，膀胱，脊背，腰骨，血液等体内液体，肛门等下窍。' },
+    gen: { symbol: '☶', name: '艮', parts: '手，胃，关节，骨，脚背，鼻子，乳房，男性生殖器，左脚，颧骨。' },
+    kun: { symbol: '☷', name: '坤', parts: '脾胃，腹部，肌肉，肥厚，右肩。' }
+};
+
+function showBaguaDetail(el) {
+    const key = el.dataset.gua;
+    const data = baguaData[key];
+    if (!data) return;
+    document.getElementById('bdSymbol').textContent = data.symbol;
+    document.getElementById('bdName').textContent = data.name;
+    document.getElementById('bdBody').textContent = data.parts;
+    document.getElementById('baguaDetail').classList.remove('hidden');
+}
+
+function closeBaguaDetail() {
+    document.getElementById('baguaDetail').classList.add('hidden');
+}
