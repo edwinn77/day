@@ -56,6 +56,10 @@
         luckyModal: $('luckyModal'),
         modalClose: $('modalClose'),
         luckyList: $('luckyList'),
+        // 说明弹窗
+        btnInfo: $('btnInfo'),
+        infoModal: $('infoModal'),
+        infoModalClose: $('infoModalClose'),
     };
 
     // ============ 核心更新函数 ============
@@ -414,6 +418,22 @@
         els.modalClose.addEventListener('click', closeLuckyModal);
         els.luckyModal.addEventListener('click', (e) => {
             if (e.target === els.luckyModal) closeLuckyModal();
+        });
+
+        // 说明弹窗
+        els.btnInfo.addEventListener('click', () => {
+            els.infoModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+        els.infoModalClose.addEventListener('click', () => {
+            els.infoModal.classList.add('hidden');
+            document.body.style.overflow = '';
+        });
+        els.infoModal.addEventListener('click', (e) => {
+            if (e.target === els.infoModal) {
+                els.infoModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
         });
 
         els.datePicker.addEventListener('change', (e) => {

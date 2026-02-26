@@ -97,6 +97,9 @@
                     <span class="btn-lucky-icon">🔍</span>
                     <span>查看吉日</span>
                 </button>
+                <button class="btn-info" id="btnInfo" title="了解九星吉日">
+                    <span>?</span>
+                </button>
             </div>
         </section>
 
@@ -109,6 +112,80 @@
                 </div>
                 <div class="modal-body" id="luckyList">
                     <!-- JS fills -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 九星吉日说明弹窗 -->
+        <div class="modal-overlay hidden" id="infoModal">
+            <div class="modal-content modal-info">
+                <div class="modal-header">
+                    <h2>📖 九星吉日算法说明</h2>
+                    <button class="modal-close" id="infoModalClose">✕</button>
+                </div>
+                <div class="modal-body modal-body-text">
+                    <div class="info-section">
+                        <h3>🌟 什么是九星？</h3>
+                        <p>九星是传统择日术中的核心系统，将六十甲子循环排列成九列，每列对应一颗星：</p>
+                        <div class="star-grid">
+                            <span class="star-bad">妖星</span>
+                            <span class="star-bad">惑星</span>
+                            <span class="star-bad">禾刀</span>
+                            <span class="star-good">煞贡 ✓</span>
+                            <span class="star-good">直星 ✓</span>
+                            <span class="star-bad">卜木</span>
+                            <span class="star-bad">角己</span>
+                            <span class="star-good">人专 ✓</span>
+                            <span class="star-bad">立早</span>
+                        </div>
+                        <p>其中 <strong>煞贡、直星、人专</strong> 三颗为吉星，其余为凶星。</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>📐 计算方法</h3>
+                        <p>将日柱在六十甲子中的序号除以 9 取余数，再根据当月所属组别判断：</p>
+                        <div class="info-table">
+                            <div class="info-table-row header">
+                                <span>月份组</span><span>所含干支月</span>
+                            </div>
+                            <div class="info-table-row">
+                                <span>孟月</span><span>寅·巳·申·亥</span>
+                            </div>
+                            <div class="info-table-row">
+                                <span>仲月</span><span>卯·午·酉·子</span>
+                            </div>
+                            <div class="info-table-row">
+                                <span>季月</span><span>辰·未·戌·丑</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>🚫 排除条件</h3>
+                        <p>即使九星属吉，还需排除两道关卡：</p>
+                        <div class="info-filter">
+                            <div class="filter-item bad">
+                                <strong>金神七煞</strong>（年禁忌）<br>
+                                <small>甲/己年忌午未 · 乙/庚年忌辰巳 · 丙/辛年忌子丑寅卯 · 丁/壬年忌戌亥 · 戊/癸年忌申酉</small>
+                            </div>
+                            <div class="filter-item bad">
+                                <strong>红煞日</strong>（月禁忌）<br>
+                                <small>孟月忌酉日 · 仲月忌巳日 · 季月忌丑日</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>🔨 大偷修日</h3>
+                        <p>以下八日特别适合房屋修造：<br>
+                            <strong>壬子 · 癸丑 · 丙辰 · 丁巳 · 戊午 · 己未 · 庚申 · 辛酉</strong>
+                        </p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>✅ 最终判定</h3>
+                        <p><strong>吉日 = 九星属吉星 且 不犯金神七煞 且 不犯红煞</strong></p>
+                    </div>
                 </div>
             </div>
         </div>

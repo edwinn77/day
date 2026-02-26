@@ -525,6 +525,31 @@ body {
     font-size: 1rem;
 }
 
+/* Info Button */
+.btn-info {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--c-ink-muted);
+    font-family: var(--f-serif);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+}
+
+.btn-info:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--c-gold);
+    color: var(--c-gold-light);
+}
+
 /* ========================================
    Modal (吉日列表弹窗)
    ======================================== */
@@ -722,6 +747,120 @@ body {
     padding: 40px 20px;
     color: var(--c-ink-muted);
     font-size: 0.9rem;
+}
+
+/* Info Modal Content */
+.modal-info {
+    max-width: 560px;
+}
+
+.modal-body-text {
+    padding: 16px 24px 24px;
+}
+
+.info-section {
+    margin-bottom: 20px;
+}
+
+.info-section:last-child {
+    margin-bottom: 0;
+}
+
+.info-section h3 {
+    font-family: var(--f-serif);
+    font-size: 0.95rem;
+    color: var(--c-gold);
+    margin-bottom: 8px;
+}
+
+.info-section p {
+    font-size: 0.85rem;
+    color: var(--c-ink);
+    line-height: 1.65;
+    margin-bottom: 8px;
+}
+
+.info-section strong {
+    color: var(--c-gold-light);
+}
+
+.star-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin: 10px 0;
+}
+
+.star-good,
+.star-bad {
+    text-align: center;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-family: var(--f-serif);
+}
+
+.star-good {
+    background: rgba(45, 139, 86, 0.15);
+    color: var(--c-jade-light);
+    border: 1px solid rgba(45, 139, 86, 0.25);
+    font-weight: 600;
+}
+
+.star-bad {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--c-ink-muted);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.info-table {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    margin: 10px 0;
+}
+
+.info-table-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 80px;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.info-table-row:last-child {
+    border-bottom: none;
+}
+
+.info-table-row.header {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--c-ink-muted);
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+.info-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.filter-item {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.filter-item.bad {
+    background: rgba(192, 72, 81, 0.08);
+    border: 1px solid rgba(192, 72, 81, 0.15);
+}
+
+.filter-item small {
+    color: var(--c-ink-muted);
+    font-size: 0.75rem;
 }
 
 .hidden {
