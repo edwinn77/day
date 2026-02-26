@@ -413,19 +413,31 @@ body {
     transition: all 0.3s ease;
 }
 
-.auspicious-card.lucky {
+.auspicious-card.level-great,
+.auspicious-card.level-good {
     background: linear-gradient(135deg, rgba(45, 139, 86, 0.12), rgba(45, 139, 86, 0.06));
     border-color: rgba(45, 139, 86, 0.35);
 }
 
-.auspicious-card.unlucky {
+.auspicious-card.level-ok {
+    background: linear-gradient(135deg, rgba(45, 139, 86, 0.08), rgba(45, 139, 86, 0.03));
+    border-color: rgba(45, 139, 86, 0.2);
+}
+
+.auspicious-card.level-neutral {
+    background: linear-gradient(135deg, rgba(180, 180, 180, 0.08), rgba(180, 180, 180, 0.03));
+    border-color: rgba(180, 180, 180, 0.2);
+}
+
+.auspicious-card.level-bad,
+.auspicious-card.level-terrible {
     background: linear-gradient(135deg, rgba(192, 72, 81, 0.12), rgba(192, 72, 81, 0.06));
     border-color: rgba(192, 72, 81, 0.35);
 }
 
 .auspicious-badge {
     font-family: var(--f-serif);
-    font-size: 2rem;
+    font-size: 1.1rem;
     font-weight: 900;
     width: 60px;
     height: 60px;
@@ -435,18 +447,46 @@ body {
     justify-content: center;
     flex-shrink: 0;
     transition: all 0.3s ease;
+    line-height: 1.2;
+    text-align: center;
 }
 
-.auspicious-badge.lucky {
+.auspicious-badge.level-great {
+    background: linear-gradient(135deg, #1a8a4a, var(--c-jade));
+    color: #fff;
+    box-shadow: 0 4px 24px rgba(45, 139, 86, 0.4);
+    font-size: 1rem;
+}
+
+.auspicious-badge.level-good {
     background: linear-gradient(135deg, var(--c-jade), var(--c-jade-light));
     color: #fff;
     box-shadow: 0 4px 20px rgba(45, 139, 86, 0.3);
 }
 
-.auspicious-badge.unlucky {
+.auspicious-badge.level-ok {
+    background: linear-gradient(135deg, rgba(45, 139, 86, 0.6), rgba(45, 139, 86, 0.4));
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(45, 139, 86, 0.2);
+}
+
+.auspicious-badge.level-neutral {
+    background: linear-gradient(135deg, rgba(180, 180, 180, 0.4), rgba(140, 140, 140, 0.4));
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(180, 180, 180, 0.15);
+}
+
+.auspicious-badge.level-bad {
     background: linear-gradient(135deg, #8a3a3a, var(--c-vermilion));
     color: #fff;
     box-shadow: 0 4px 20px rgba(192, 72, 81, 0.3);
+}
+
+.auspicious-badge.level-terrible {
+    background: linear-gradient(135deg, #5a1a1a, #8a3a3a);
+    color: #fff;
+    box-shadow: 0 4px 24px rgba(192, 72, 81, 0.4);
+    font-size: 1rem;
 }
 
 .auspicious-info {
@@ -469,6 +509,22 @@ body {
     line-height: 1.4;
 }
 
+.auspicious-factors {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.factor-tag {
+    font-size: 0.72rem;
+    padding: 2px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--c-ink-muted);
+}
+
 .auspicious-tags {
     display: flex;
     gap: 8px;
@@ -476,14 +532,11 @@ body {
     margin-top: 4px;
 }
 
-.auspicious-star,
-.auspicious-group {
-    font-size: 0.75rem;
-    padding: 2px 10px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: var(--c-ink-muted);
+.auspicious-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .auspicious-datou {
@@ -791,6 +844,10 @@ body {
     margin: 10px 0;
 }
 
+.star-grid.star-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
 .star-good,
 .star-bad {
     text-align: center;
@@ -822,7 +879,7 @@ body {
 
 .info-table-row {
     display: grid;
-    grid-template-columns: 60px 1fr 80px;
+    grid-template-columns: 1fr 1fr;
     padding: 8px 14px;
     font-size: 0.8rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);

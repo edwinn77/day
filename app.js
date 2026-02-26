@@ -43,14 +43,14 @@
         calDays: $('calDays'),
         prevMonth: $('prevMonth'),
         nextMonth: $('nextMonth'),
-        // 九星吉日
+        // 综合择吉
         auspiciousCard: $('auspiciousCard'),
         auspiciousBadge: $('auspiciousBadge'),
         auspiciousTitle: $('auspiciousTitle'),
-        auspiciousReason: $('auspiciousReason'),
-        auspiciousStar: $('auspiciousStar'),
-        auspiciousGroup: $('auspiciousGroup'),
+        auspiciousAdvice: $('auspiciousAdvice'),
+        auspiciousFactors: $('auspiciousFactors'),
         auspiciousDaTou: $('auspiciousDaTou'),
+        huangdao: $('huangdao'),
         // 吉日弹窗
         btnFindLucky: $('btnFindLucky'),
         luckyModal: $('luckyModal'),
@@ -99,6 +99,9 @@
         renderTags(els.jiList, almanac.ji, 'tag');
 
         // === 更新详细信息 ===
+        els.huangdao.textContent = almanac.huangdao
+            ? almanac.huangdao.godType + ' · ' + almanac.huangdao.godName
+            : '—';
         els.wuxing.textContent = almanac.wuxing;
         els.chongsha.textContent = almanac.chongSha.text;
         els.pengzu.textContent = almanac.pengzu;
@@ -109,16 +112,28 @@
         // === 更新时辰 ===
         renderShiChen(almanac.shiChen);
 
-        // === 更新九星吉日 ===
-        if (almanac.auspicious) {
+        // === 更新综合择吉 ===
+        if (almanac.comprehensive) {
+            const comp = almanac.comprehensive;
             const aus = almanac.auspicious;
-            els.auspiciousBadge.textContent = aus.status;
-            els.auspiciousBadge.className = 'auspicious-badge ' + (aus.isLucky ? 'lucky' : 'unlucky');
-            els.auspiciousCard.className = 'auspicious-card ' + (aus.isLucky ? 'lucky' : 'unlucky');
-            els.auspiciousReason.textContent = aus.reason;
-            els.auspiciousStar.textContent = '☆ ' + aus.nineStar.starName;
-            els.auspiciousGroup.textContent = aus.nineStar.monthGroup;
-            if (aus.daTouXiu) {
+
+            // 综合评级徽章
+            els.auspiciousBadge.textContent = comp.label;
+            els.auspiciousBadge.className = 'auspicious-badge level-' + comp.level;
+            els.auspiciousCard.className = 'auspicious-card level-' + comp.level;
+            els.auspiciousAdvice.textContent = comp.advice;
+
+            // 因素标签
+            els.auspiciousFactors.innerHTML = '';
+            comp.factors.forEach(f => {
+                const span = document.createElement('span');
+                span.className = 'factor-tag';
+                span.textContent = f;
+                els.auspiciousFactors.appendChild(span);
+            });
+
+            // 大偷修日
+            if (aus && aus.daTouXiu) {
                 els.auspiciousDaTou.classList.remove('hidden');
             } else {
                 els.auspiciousDaTou.classList.add('hidden');

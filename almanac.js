@@ -373,6 +373,136 @@ const Almanac = (() => {
         };
     }
 
+    // ============ 黄道吉日算法 (青龙起例) ============
+    // 十二星神固定顺序
+    const twelveGods = [
+        { name: '青龙', type: '黄道', status: '吉' },
+        { name: '明堂', type: '黄道', status: '吉' },
+        { name: '天刑', type: '黑道', status: '凶' },
+        { name: '朱雀', type: '黑道', status: '凶' },
+        { name: '金匠', type: '黄道', status: '吉' },
+        { name: '天德', type: '黄道', status: '吉' },
+        { name: '白虎', type: '黑道', status: '凶' },
+        { name: '玉堂', type: '黄道', status: '吉' },
+        { name: '天牢', type: '黑道', status: '凶' },
+        { name: '玄武', type: '黑道', status: '凶' },
+        { name: '司命', type: '黄道', status: '吉' },
+        { name: '勾陈', type: '黑道', status: '凶' }
+    ];
+
+    /**
+     * 获取黄道吉日信息
+     * monthNum: 干支月编号 (1=寅月, ..., 12=丑月)
+     * dayZhiIdx: 日支index (0=子, ..., 11=亥)
+     * 返回: { godName, godType, isHuangDao }
+     */
+    function getHuangDaoInfo(monthNum, dayZhiIdx) {
+        // 每月青龙起始地支
+        // 寅(1)/申(7)→子(0), 卯(2)/酉(8)→寅(2), 辰(3)/戌(9)→辰(4)
+        // 巳(4)/亥(10)→午(6), 午(5)/子(11)→申(8), 未(6)/丑(12)→戌(10)
+        const startZhi = ((monthNum - 1) % 6) * 2;
+
+        // 计算当日对应的星神索引
+        const godIdx = (dayZhiIdx - startZhi + 12) % 12;
+        const god = twelveGods[godIdx];
+
+        return {
+            godName: god.name,
+            godType: god.type,
+            isHuangDao: god.type === '黄道',
+            status: god.status
+        };
+    }
+
+    // ============ 综合择吉评估 ============
+    /**
+     * 综合三套系统: 黄道 + 建除 + 九星
+     * 返回综合评分和建议
+     */
+    function getComprehensiveAssessment(huangdao, jianChuName, auspicious) {
+        let score = 0;
+        const factors = [];
+
+        // 黄道: +2, 黑道: -1
+        if (huangdao.isHuangDao) {
+            score += 2;
+            factors.push('黄道' + huangdao.godName + '主吉');
+        } else {
+            score -= 1;
+            factors.push('黑道' + huangdao.godName + '主凶');
+        }
+
+        // 建除十二直: 成/开/定 = +2, 满/除/执 = +1, 危 = 0, 建/平/收 = -1, 破/闭 = -2
+        const jcScores = {
+            '成': 2, '开': 2, '定': 2,
+            '满': 1, '除': 1, '执': 1,
+            '危': 0, '建': 0,
+            '平': -1, '收': -1,
+            '破': -2, '闭': -2
+        };
+        const jcScore = jcScores[jianChuName] || 0;
+        score += jcScore;
+        if (jcScore >= 2) {
+            factors.push('十二直属「' + jianChuName + '」（大吉）');
+        } else if (jcScore >= 1) {
+            factors.push('十二直属「' + jianChuName + '」（小吉）');
+        } else if (jcScore >= 0) {
+            factors.push('十二直属「' + jianChuName + '」（中平）');
+        } else {
+            factors.push('十二直属「' + jianChuName + '」（不吉）');
+        }
+
+        // 九星: 吉星 +2, 凶星 0, 犯金神七煞/红煞 -3
+        if (auspicious.isLucky) {
+            score += 2;
+            factors.push('九星属' + auspicious.nineStar.auspiciousType + '（吉星加持）');
+        } else if (auspicious.jinShen) {
+            score -= 3;
+            factors.push('犯金神七煞（大凶）');
+        } else if (auspicious.hongSha) {
+            score -= 3;
+            factors.push('犯红煞日（大凶）');
+        } else {
+            factors.push('九星属' + auspicious.nineStar.starName + '（凶星）');
+        }
+
+        // 综合判定
+        let level, label, advice;
+        if (score >= 5) {
+            level = 'great';
+            label = '上上吉';
+            advice = '三系统均吉，诸事皆宜，大事可行。';
+        } else if (score >= 3) {
+            level = 'good';
+            label = '上吉';
+            advice = '多数吉象，宜办大事。';
+        } else if (score >= 1) {
+            level = 'ok';
+            label = '小吉';
+            advice = '小事可用，大事需斟酌。';
+        } else if (score >= -1) {
+            level = 'neutral';
+            label = '中平';
+            advice = '无大吉大凶，平常事可办。';
+        } else if (score >= -3) {
+            level = 'bad';
+            label = '不吉';
+            advice = '不宜办大事，宜静守。';
+        } else {
+            level = 'terrible';
+            label = '大凶';
+            advice = '诸事不宜，必须避开。';
+        }
+
+        return {
+            score,
+            level,
+            label,
+            advice,
+            factors
+        };
+    }
+
     // ============ 综合推算今日黄历 ============
     function getDayAlmanac(dateInfo) {
         if (!dateInfo) return null;
@@ -424,6 +554,12 @@ const Almanac = (() => {
             monthNum
         );
 
+        // 黄道吉日
+        const huangdao = getHuangDaoInfo(monthNum, ganzhi.dayZhiIdx);
+
+        // 综合评估
+        const comprehensive = getComprehensiveAssessment(huangdao, jc.name, auspicious);
+
         return {
             jianChu: jc.name,
             yi: Array.from(yiSet),
@@ -434,7 +570,9 @@ const Almanac = (() => {
             jiShen,
             xiongShen,
             shiChen,
-            auspicious
+            auspicious,
+            huangdao,
+            comprehensive
         };
     }
 
@@ -449,6 +587,7 @@ const Almanac = (() => {
         getDayAlmanac,
         getAuspiciousDay,
         getNineStarInfo,
+        getHuangDaoInfo,
         jianChu
     };
 })();
